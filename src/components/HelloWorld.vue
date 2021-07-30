@@ -1,102 +1,175 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
+    <app-toolip text="Help text here" />
+
+    <Child :list="list" staticList="search" @changeUpdate="onChildUpdate" />
+
+    {{ userReadableTime }}
+
+    <br /><br /><br />
+    <template v-if="false">
+      <h1>{{ msg }}</h1>
+      <p>text</p>
+    </template>
+
+    <section v-show="false">
+      <h1>{{ msg }}</h1>
+      <p>text</p>
+    </section>
+
+    <!-- <div class="form-element" :class="">
+    <input v-model.trim="search"/>
+</div> -->
+
+    <button v-show="searchLengthLongEnough">search</button>
+
+    {{ searchReverse }}
+
+    <br />
+    <br />
+    <li v-for="(item, index) in filterBySearch(list)" :key="`list1-${index}`">
+      {{ index + 1 }} {{ item.msg }}
+    </li>
+
+    <!-- <li v-for="(item, index) in [1,2,3,4,5]" :key="index">
+     {{item}}
+    </li> -->
+
+    <button @click="changedArrayState">call changedArrayState</button>
+    <button @click="kickElementFromEnd">call kickElementFromEnd</button>
+
+    <br /><br /><br /><br />
+    <button @mouseenter="changedState">call changedState</button>
+
+    <p :class="classObject">
       For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
     </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
+//v2 Object.defineProperty
+//v3 Proxes
+// !!!! 2 version !!!
+import Vue from "vue";
+import Child from "./Child.vue";
+
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
+  },
+  components: {
+    Child,
+  },
+
+  filters: {
+    textLength(value) {
+      return value.length;
+    },
+  },
+  computed: {
+    userReadableTime: function () {
+      return this.date.split(" ")[4];
+    },
+    searchReverse: function () {
+      return this.search.split("").reverse().join("");
+    },
+    // searchLengthLongEnough: function() {
+    //    return this.search.length > 3
+    // }
+    // passwordContainsA: function() {
+    // passwordContainsNumers: function() {
+    // passwordContainsEnoughLength: function() {
+  },
+
+  watch: {
+    search: "searchChangeCB",
+    "classObject.active": "onClassObjectChange",
+    classObject: {
+      deep: true,
+      handler: "onClassObjectChange",
+    },
+  },
+
+  //this.state = {}
+  data: () => ({
+    search: "",
+    classObject: {
+      active: false,
+      changed: true,
+    },
+    list: [
+      {
+        msg: "test",
+      },
+      {
+        msg: "configure",
+      },
+      {
+        msg: "classObject",
+      },
+      {
+        msg: "attribute",
+      },
+    ],
+    date: "",
+    //userReadableTime: ''
+    searchLengthLongEnough: false,
+  }),
+
+  mounted() {
+    setInterval(() => {
+      this.date = Date();
+    }, 300);
+
+    this.$watch("", () => {});
+  },
+
+  methods: {
+    searchChangeCB: function (val, oldVal) {
+      this.searchLengthLongEnough = val.length > 3;
+    },
+    onClassObjectChange(val) {
+      console.log(val);
+    },
+    onChildUpdate(data) {
+      console.log(data);
+    },
+    changedState() {
+      this.classObject.active = true;
+      this.classObject.used = true;
+    },
+    filterBySearch(list) {
+      if (!this.searchLengthLongEnough) return list;
+
+      return list.filter((el) => el.msg.indexOf(this.search) > -1);
+    },
+    changedArrayState() {
+      //this.list[0] = 'tomorrow it\'s friday'
+      // !!!! 2 version !!!
+      //this.$set
+      Vue.set(this.list, 0, {
+        msg: "tomorrow it's friday",
+      });
+    },
+    kickElementFromEnd() {
+      // !!!! 2 version !!!
+      Vue.delete(this.list, this.list.length - 1);
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.active {
+  background: #fc0;
+}
+.changed {
+  font-weight: 700;
+}
+
 h3 {
   margin: 40px 0 0;
 }
