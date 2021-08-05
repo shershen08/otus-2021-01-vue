@@ -1,16 +1,12 @@
 import Vue from "vue";
 import App from "./App.vue";
+import router from "./router";
+import store from "./store";
 
 Vue.config.productionTip = false;
 
-Vue.component("app-toolip", {
-  template: '<div :title="text">i</div>',
-  data: () => ({
-    show: false,
-  }),
-  props: ["text"],
-});
-
 new Vue({
+  router,
+  store,
   render: (h) => h(App),
 }).$mount("#app");

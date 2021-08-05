@@ -41,7 +41,7 @@
     <br /><br /><br /><br />
     <button @mouseenter="changedState">call changedState</button>
 
-    <p :class="classObject">
+    <p :class="classObject" v-text-highlight.blinking="'red'">
       For a guide and recipes on how to configure / customize this project,<br />
     </p>
   </div>

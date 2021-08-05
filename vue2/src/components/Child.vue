@@ -40,6 +40,7 @@ export default {
     change() {
       //this.list = [];
       this.$emit("changeUpdate", this.list);
+      this.myMethod()
     },
   },
 };
