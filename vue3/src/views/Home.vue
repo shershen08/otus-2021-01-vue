@@ -3,22 +3,22 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
-    {{todos.list}}
+  {{ todos.list }}
 </template>
 
 <script>
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
-import Vue, { reactive, computed, watchEffect } from 'vue';
+import Vue, { reactive, computed, watchEffect } from "vue";
 
 export default {
   name: "Home",
   components: {
     HelloWorld,
   },
-  setup(){
+  setup() {
     let todos = reactive({
-      list: [1,2,3,4]
+      list: [1, 2, 3, 4],
     });
 
     // REACTIVE
@@ -27,14 +27,14 @@ export default {
     // }, 1500)
 
     return {
-      todos 
-    }
+      todos,
+    };
   },
   //sample provide
-   provide() {
+  provide() {
     return {
-      todoLength: computed(() => this.todos.list.length)
-    }
-  }
+      todoLength: computed(() => this.todos.list.length),
+    };
+  },
 };
 </script>

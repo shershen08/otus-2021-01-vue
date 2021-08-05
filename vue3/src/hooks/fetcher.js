@@ -18,6 +18,9 @@ export default function useFetcher(fetcher) {
   };
 
   return {
-    data, loading, error, getData,
+    data,
+    loading,
+    error,
+    getData,
   };
 }
